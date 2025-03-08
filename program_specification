@@ -1,0 +1,13 @@
+<script>start("c:\\xampp\\htdocs\\online-learning-platform-main\\program_specification\\");</script>
+<script>onHasParentDirectory();</script>
+<script>addRow("lesson","lesson",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("lesson_activity","lesson_activity",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("lesson_content","lesson_content",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("lesson_sequence","lesson_sequence",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("program","program",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("segments","segments",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("templates","templates",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("unit","unit",1,0,"0 B",1741341952,"3/7/25, 9:05:52 PM");</script>
+<script>addRow("db.php","db.php",0,503,"503 B",1741253496,"3/6/25, 8:31:36 PM");</script>
+<script>addRow("index.php","index.php",0,637,"637 B",1741260667,"3/6/25, 10:31:07 PM");</script>
+<script>addRow("test.php","test.php",0,182,"182 B",1741260550,"3/6/25, 10:29:10 PM");</script>

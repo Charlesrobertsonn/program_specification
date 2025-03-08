@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phonetic Focus - Short 'a' Sound</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .video-container {
+            margin-bottom: 20px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border: 2px solid #333;
+            border-radius: 8px;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .phonics-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: #f8e7e7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .text-lines {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 10px;
+            text-align: left;
+        }
+
+        .text-line input {
+            width: 60px;
+            height: 20px;
+            border: none;
+            border-bottom: 2px solid black;
+            background: transparent;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+
+        .example-text {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .example-image {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid black;
+            margin-left: 10px;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .word {
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .word:hover {
+            background: #bbb;
+        }
+
+        .spelling-section {
+            margin-top: 20px;
+        }
+
+        .word-audio {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .play-btn {
+            background: blue;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .check-btn {
+            background: green;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phonetic Focus: Short 'a' Sound</h1>
+
+        <div class="video-container">
+            <h2>Learn the Short 'a' Sound</h2>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/your_video_id_here" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="phonics-section">
+            <div class="text-lines">
+                <div class="text-line"><input type="text"></div>
+                <div class="text-line"><input type="text"></div>
+                <div class="text-line"><input type="text"></div>
+                <div class="text-line"><input type="text"></div>
+                <div class="text-line"><input type="text"></div>
+                <div class="text-line"><input type="text"></div>
+            </div>
+            
+            <div class="example-text">
+                <h2 style="font-size: 36px;">Short 'a'</h2>
+                <p style="font-size: 24px;">'a' as in cat</p>
+            </div>
+            
+            <div class="example-image">
+                <img src="path/to/cat-image.jpg" alt="Cat Image" class="example-image">
+            </div>
+        </div>
+
+        <div class="reading-section">
+            <h2>Words to Read</h2>
+            <div class="word-list" id="word-list"></div>
+        </div>
+
+        <div class="spelling-section">
+            <h2>Spell the Words</h2>
+            <p>Press the "Play" button to hear the word, then type the correct spelling.</p>
+            <div id="spelling-list"></div>
+            <button class="check-btn" onclick="checkSpelling()">Check Answers</button>
+            <p id="spelling-result" class="result"></p>
+        </div>
+    </div>
+
+    <script>
+        const words = ["cat", "bat", "map", "van", "jam", "wax", "rat", "bag", "tag", "lap"];
+        const selectedWords = words.slice(0, 4);
+        
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                let utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert("Your browser does not support text-to-speech.");
+            }
+        }
+
+        function generateWordList() {
+            const wordListContainer = document.getElementById("word-list");
+            words.forEach(word => {
+                const wordDiv = document.createElement("div");
+                wordDiv.className = "word";
+                wordDiv.textContent = word;
+                wordDiv.onclick = () => speakWord(word);
+                wordListContainer.appendChild(wordDiv);
+            });
+        }
+
+        function generateSpellingList() {
+            const spellingContainer = document.getElementById("spelling-list");
+            spellingContainer.innerHTML = "";
+            selectedWords.forEach((word, index) => {
+                const spellingDiv = document.createElement("div");
+                spellingDiv.className = "word-audio";
+                spellingDiv.innerHTML = `
+                    <p>Word ${index + 1}:</p>
+                    <button class="play-btn" onclick="playAudio('${word}')">🔊 Play</button>
+                    <input type="text" id="word${index + 1}">
+                    <span id="feedback${index + 1}"></span>
+                `;
+                spellingContainer.appendChild(spellingDiv);
+            });
+        }
+
+        function playAudio(word) {
+            let audio = new Audio(`audio/${word}.mp3`);
+            audio.play().catch(() => {
+                alert(`Audio file for '${word}' not found.`);
+            });
+        }
+
+        function checkSpelling() {
+            selectedWords.forEach((word, index) => {
+                let userInput = document.getElementById("word" + (index + 1)).value.toLowerCase();
+                let feedback = document.getElementById("feedback" + (index + 1));
+                feedback.textContent = userInput === word ? " ✅" : " ❌";
+                feedback.style.color = userInput === word ? "green" : "red";
+            });
+        }
+
+        generateWordList();
+        generateSpellingList();
+    </script>
+</body>
+</html>
