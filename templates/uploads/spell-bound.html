@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spell Bound - Spelling & Sentence Review</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .sentence-box, .passage-box {
+            background: #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .word-bank {
+            background: #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .draggable {
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            cursor: grab;
+            font-weight: bold;
+        }
+        .droppable {
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            background: white;
+            border: 2px dashed #000;
+            vertical-align: middle;
+            line-height: 30px;
+        }
+        .btn-container {
+            margin-top: 10px;
+        }
+        .btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .progress-container {
+            width: 80%;
+            background: #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+            height: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #4CAF50;
+            border-radius: 8px;
+            transition: width 0.5s ease-in-out;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><strong>Spell Bound - Spelling & Sentence Review</strong></h1>
+        <p>Complete the passages and sentences correctly.</p>
+
+        <h2><strong>Fill in the Cloze Passages</strong></h2>
+        <div id="passage-section">
+            <div class="passage-box"> <strong>1.</strong> The <span class="droppable" data-word="brown"></span> fox jumps over the lazy <span class="droppable" data-word="dog"></span>. </div>
+            <div class="passage-box"> <strong>2.</strong> She picked a <span class="droppable" data-word="red"></span> apple from the <span class="droppable" data-word="tree"></span>. </div>
+            <div class="passage-box"> <strong>3.</strong> The <span class="droppable" data-word="cat"></span> ran across the <span class="droppable" data-word="street"></span>. </div>
+            <div class="word-bank">
+                <div class="draggable" draggable="true" data-word="brown">brown</div>
+                <div class="draggable" draggable="true" data-word="dog">dog</div>
+                <div class="draggable" draggable="true" data-word="red">red</div>
+                <div class="draggable" draggable="true" data-word="tree">tree</div>
+                <div class="draggable" draggable="true" data-word="cat">cat</div>
+                <div class="draggable" draggable="true" data-word="street">street</div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const draggables = document.querySelectorAll(".draggable");
+                const droppables = document.querySelectorAll(".droppable");
+                const progressBar = document.getElementById("progress-bar");
+                let correctCount = 0;
+                let totalTasks = droppables.length;
+
+                // Drag and Drop Functionality
+                draggables.forEach(draggable => {
+                    draggable.addEventListener("dragstart", function (e) {
+                        e.dataTransfer.setData("text", e.target.getAttribute("data-word"));
+                    });
+                });
+
+                droppables.forEach(droppable => {
+                    droppable.addEventListener("dragover", function (e) {
+                        e.preventDefault();
+                    });
+
+                    droppable.addEventListener("drop", function (e) {
+                        e.preventDefault();
+                        const word = e.dataTransfer.getData("text");
+                        if (word === droppable.getAttribute("data-word")) {
+                            droppable.textContent = word;
+                            droppable.style.border = "none";
+                            droppable.style.background = "#c8e6c9";
+                            droppable.setAttribute("data-filled", "true");
+                            correctCount++;
+                            updateProgress();
+                        } else {
+                            alert("Incorrect! Try again.");
+                        }
+                    });
+                });
+
+                function updateProgress() {
+                    let progressPercentage = (correctCount / totalTasks) * 100;
+                    progressBar.style.width = progressPercentage + "%";
+                }
+
+                // Sentence Dictation using Text-to-Speech (TTS)
+                let sentences = [
+                    "The quick brown fox jumps over the lazy dog.",
+                    "She picked a red apple from the tree.",
+                    "The cat ran across the street."
+                ];
+                let currentSentenceIndex = 0;
+
+                function playSentence() {
+                    let msg = new SpeechSynthesisUtterance(sentences[currentSentenceIndex]);
+                    window.speechSynthesis.speak(msg);
+                }
+
+                function checkSentence() {
+                    let userSentence = document.getElementById("sentence-input").value.trim();
+                    let correctSentence = sentences[currentSentenceIndex];
+
+                    if (userSentence.toLowerCase() === correctSentence.toLowerCase()) {
+                        document.getElementById("result-message").textContent = "Correct!";
+                        document.getElementById("result-message").style.color = "green";
+                    } else {
+                        document.getElementById("result-message").textContent = "Incorrect, try again!";
+                        document.getElementById("result-message").style.color = "red";
+                    }
+                }
+
+                function nextTask() {
+                    if (currentSentenceIndex < sentences.length - 1) {
+                        currentSentenceIndex++;
+                        document.getElementById("sentence-text").textContent = "Click 'Go' to hear the sentence";
+                        document.getElementById("sentence-input").value = "";
+                        document.getElementById("result-message").textContent = "";
+                    } else {
+                        alert("You have completed all sentences!");
+                    }
+                }
+
+                function showHint() {
+                    alert("Hint: " + sentences[currentSentenceIndex]);
+                }
+
+                window.playSentence = playSentence;
+                window.checkSentence = checkSentence;
+                window.nextTask = nextTask;
+                window.showHint = showHint;
+            });
+        </script>
+    <h2><strong>Write the Sentences</strong></h2>
+        <div id="sentence-section">
+            <div class="sentence-box" id="sentence-text">Click "Go" to hear the sentence</div>
+            <textarea id="sentence-input" style="width: 95%; height: 150px; font-size: 18px; font-family: 'Poppins', sans-serif; padding: 15px; border-radius: 5px; border: 2px solid #ddd; background: white; resize: none;" placeholder="Write the sentence here..."></textarea>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn" style="background: #4CAF50;" onclick="playSentence()">Go</button>
+                <button class="btn" style="background: #f44336;" onclick="checkSentence()">Check</button>
+                <button class="btn" style="background: #008CBA;" onclick="nextTask()">Next</button>
+                <button class="btn" style="background: #FFC107;" onclick="showHint()">Hint</button>
+            </div>
+            <p id="result-message" class="result"></p>
+            <p id="score-message" class="result"></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin: 20px 0 10px 0;
+        }
+
+        main p {
+            font-size: 28px;
+            margin: 0 0 20px 0;
+            font-weight: 400;
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 800px;
+            width: 90%;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            text-align: center;
+        }
+
+        .letter {
+            font-size: 100px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+            text-align: center;
+            text-transform: lowercase;
+        }
+
+        .slide img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .caption {
+            font-size: 18px;
+            margin-top: 10px;
+            text-transform: lowercase;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            padding: 10px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .prev:hover, .next:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .dots-container {
+            margin-top: 10px;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .active, .dot:hover {
+            background-color: #717171;
+        }
+
+        .fade {
+            animation: fadeEffect 1s;
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0.4;}
+            to {opacity: 1;}
+        }
+
+        .play-pause-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sound Deck</h1>
+</header>
+
+<main>
+    <p>Listen to my voice and sound them out!</p>
+
+    <div class="slideshow-container">
+
+        <div class="slide fade" data-sound="url_to_sound_S"><div class="letter">s</div><img src="url_to_image_of_S"><div class="caption">s - <a href="url_to_sound_S" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_M"><div class="letter">m</div><img src="url_to_image_of_M"><div class="caption">m - <a href="url_to_sound_M" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_N"><div class="letter">n</div><img src="url_to_image_of_N"><div class="caption">n - <a href="url_to_sound_N" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_F"><div class="letter">f</div><img src="url_to_image_of_F"><div class="caption">f - <a href="url_to_sound_F" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_T"><div class="letter">t</div><img src="url_to_image_of_T"><div class="caption">t - <a href="url_to_sound_T" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_A"><div class="letter">a</div><img src="url_to_image_of_A"><div class="caption">a - <a href="url_to_sound_A" target="_blank">hear sound</a></div></div>
+        <div class="slide fade" data-sound="url_to_sound_Bat"><div class="letter">bat</div><img src="url_to_image_of_Bat"><div class="caption">cvc word: bat</div></div>
+
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
+
+        <div class="dots-container">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+            <span class="dot" onclick="currentSlide(6)"></span>
+            <span class="dot" onclick="currentSlide(7)"></span>
+        </div>
+
+        <button class="play-pause-btn" onclick="togglePlayPause()">Pause</button>
+
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 Your Name</p>
+</footer>
+
+<script>
+    let slideIndex = 0;
+    let autoSlideTimeout;
+    let isAutoPlaying = true;
+    const AUTO_PLAY_INTERVAL = 5000;
+    let currentAudio = null;
+
+    function initSlides() {
+        showSlides(slideIndex);
+        autoSlideTimeout = setTimeout(autoSlides, AUTO_PLAY_INTERVAL);
+    }
+
+    function changeSlide(n) {
+        clearTimeout(autoSlideTimeout);
+        showSlides(slideIndex += n);
+        if (isAutoPlaying) {
+            autoSlideTimeout = setTimeout(autoSlides, AUTO_PLAY_INTERVAL);
+        }
+    }
+
+    function currentSlide(n) {
+        clearTimeout(autoSlideTimeout);
+        showSlides(slideIndex = n - 1);
+        if (isAutoPlaying) {
+            autoSlideTimeout = setTimeout(autoSlides, AUTO_PLAY_INTERVAL);
+        }
+    }
+
+    function autoSlides() {
+        slideIndex++;
+        showSlides(slideIndex);
+        if (isAutoPlaying) {
+            autoSlideTimeout = setTimeout(autoSlides, AUTO_PLAY_INTERVAL);
+        }
+    }
+
+    function showSlides(n) {
+        const slides = document.getElementsByClassName("slide");
+        const dots = document.getElementsByClassName("dot");
+
+        if (n >= slides.length) slideIndex = 0;
+        if (n < 0) slideIndex = slides.length - 1;
+
+        for (let slide of slides) {
+            slide.style.display = "none";
+        }
+        for (let dot of dots) {
+            dot.classList.remove("active");
+        }
+
+        slides[slideIndex].style.display = "block";
+        dots[slideIndex].classList.add("active");
+
+        playSlideSound(slides[slideIndex].getAttribute('data-sound'));
+    }
+
+    function playSlideSound(soundUrl) {
+        if (currentAudio) currentAudio.pause();
+        if (soundUrl) {
+            currentAudio = new Audio(soundUrl);
+            currentAudio.play();
+        }
+    }
+
+    function togglePlayPause() {
+        isAutoPlaying = !isAutoPlaying;
+        document.querySelector('.play-pause-btn').textContent = isAutoPlaying ? "Pause" : "Play";
+        if (isAutoPlaying) autoSlides();
+        else clearTimeout(autoSlideTimeout);
+    }
+
+    window.onload = initSlides;
+</script>
+
+</body>
+</html>

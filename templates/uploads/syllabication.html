@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabication Focus - VC/CV Rule</title>
+    <!-- Import Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f4f4;
+            margin: 20px;
+            text-align: center;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Headings */
+        h1, h2 {
+            color: #333;
+        }
+
+        /* Video Section */
+        .video-section {
+            margin-bottom: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+            border-radius: 8px;
+        }
+
+        /* Reading Section */
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .word {
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer; /* Make words clickable */
+        }
+
+        /* Syllabication Activity */
+        .syllable-section {
+            margin-top: 20px;
+        }
+
+        /* Grid layout for examples (3 columns x 2 rows) */
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Container for the two syllable inputs */
+        .syllable-inputs {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        /* Styling for each syllable input */
+        .syllable-inputs input {
+            width: 100px;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .check-btn {
+            background: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .check-btn:hover {
+            background: darkgreen;
+        }
+
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Special styling for the example group (read-only) */
+        .form-group.example {
+            background: #e9f5ff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Syllabication Focus: VC/CV Rule</h1>
+    </header>
+    
+    <main class="container">
+        <!-- Video Section -->
+        <section class="video-section">
+            <h2>Learn How to Divide Words into Syllables</h2>
+            <iframe src="https://www.youtube.com/embed/your_video_id_here" title="Syllabication Tutorial Video" allowfullscreen></iframe>
+        </section>
+
+        <!-- Reading Activity -->
+        <section class="reading-section">
+            <h2>Words to Read (VC/CV Pattern)</h2>
+            <div class="word-list">
+                <div class="word">Rabbit</div>
+                <div class="word">Basket</div>
+                <div class="word">Puppet</div>
+                <div class="word">Letter</div>
+                <div class="word">Summer</div>
+                <div class="word">Muffin</div>
+                <div class="word">Kitten</div>
+                <div class="word">Happy</div>
+                <div class="word">Cactus</div>
+                <div class="word">Tennis</div>
+            </div>
+        </section>
+
+        <!-- Syllabication Activity -->
+        <section class="syllable-section">
+            <h2>Divide the Syllables</h2>
+            <p>Below is an example. Now separate each two-syllable word by typing each part into the boxes.</p>
+            <form id="syllable-form">
+                <!-- Example (pre-filled) -->
+                <div class="form-group example">
+                    <label for="example1">Example: Rabbit</label>
+                    <div class="syllable-inputs">
+                        <input type="text" id="example1a" name="example1a" value="Rab" readonly>
+                        <input type="text" id="example1b" name="example1b" value="bit" readonly>
+                    </div>
+                </div>
+                <!-- Student Inputs -->
+                <div class="form-group">
+                    <label for="word2">Basket:</label>
+                    <div class="syllable-inputs">
+                        <input type="text" id="word2a" name="word2a" placeholder="Syllable 1" required>
+                        <input type="text" id="word2b" name="word2b" placeholder="Syllable 2" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="word3">Puppet:</label>
+                    <div class="syllable-inputs">
+                        <input type="text" id="word3a" name="word3a" placeholder="Syllable 1" required>
+                        <input type="text" id="word3b" name="word3b" placeholder="Syllable 2" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="word4">Letter:</label>
+                    <div class="syllable-inputs">
+                        <input type="text" id="word4a" name="word4a" placeholder="Syllable 1" required>
+                        <input type="text" id="word4b" name="word4b" placeholder="Syllable 2" required>
+                    </div>
+                </div>
+                <button type="button" class="check-btn" id="checkBtn">Check Answers</button>
+            </form>
+            <p id="syllable-result" class="result"></p>
+        </section>
+    </main>
+
+    <script>
+        // Function to check if the syllabication is correct
+        function checkSyllables() {
+            const correctSyllables = {
+                "word2": ["Bas", "ket"],
+                "word3": ["Pup", "pet"],
+                "word4": ["Let", "ter"]
+            };
+
+            let score = 0;
+
+            for (let key in correctSyllables) {
+                let userInput1 = document.getElementById(key + "a").value.trim();
+                let userInput2 = document.getElementById(key + "b").value.trim();
+                if (userInput1.toLowerCase() === correctSyllables[key][0].toLowerCase() &&
+                    userInput2.toLowerCase() === correctSyllables[key][1].toLowerCase()) {
+                    score++;
+                }
+            }
+
+            let resultText = score === 3 ? "Excellent! ✅ You got all correct!" : `You got ${score}/3 correct. Try again! ❌`;
+            document.getElementById("syllable-result").textContent = resultText;
+            document.getElementById("syllable-result").style.color = score === 3 ? "green" : "red";
+        }
+
+        document.getElementById("checkBtn").addEventListener("click", checkSyllables);
+
+        // Function to read the word aloud
+        function readWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            speechSynthesis.speak(utterance);
+        }
+
+        // Add event listeners to each word
+        document.querySelectorAll('.word').forEach(wordElement => {
+            wordElement.addEventListener('click', () => {
+                readWord(wordElement.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

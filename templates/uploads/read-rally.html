@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Rally - CVC2 Reading Activity</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1, h2 { color: #333; }
+        .word-list, .sentence-list {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .word, .sentence {
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .word:hover, .sentence:hover { background: #bbb; }
+        .timer-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #333;
+            display: inline-block;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .timer { font-size: 24px; font-weight: bold; }
+        .btn {
+            background: blue;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .btn:hover { background: darkblue; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Read Rally - CVC2 Reading Activity</h1>
+        
+        <div class="timer-section">
+            <button class="btn" onclick="startStopwatch()">Start</button>
+            <button class="btn" onclick="pauseStopwatch()">Pause</button>
+            <button class="btn" onclick="resetStopwatch()">Reset</button>
+            <p class="timer" id="timer">Time: 0:00</p>
+        </div>
+
+        <h2>Words</h2>
+        <p style="font-size: 18px; font-weight: 500;">Practice reading aloud. Click on words and sentences to hear pronunciation.</p>
+        <div class="word-list" id="wordList"></div>
+
+        <h2>Sentences</h2>
+        <div class="sentence-list" id="sentenceList"></div>
+    </div>
+
+    <script>
+        let stopwatchInterval;
+        let elapsedTime = 0;
+        let isRunning = false;
+
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                let startTime = Date.now() - elapsedTime;
+                stopwatchInterval = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    document.getElementById('timer').innerText = formatTime(elapsedTime);
+                }, 100);
+            }
+        }
+
+        function pauseStopwatch() {
+            clearInterval(stopwatchInterval);
+            isRunning = false;
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            elapsedTime = 0;
+            isRunning = false;
+            document.getElementById('timer').innerText = "Time: 0:00";
+        }
+
+        function formatTime(ms) {
+            let totalSeconds = Math.floor(ms / 1000);
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            return `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function speakText(text) {
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'en-US';
+            speech.rate = 0.9; 
+            window.speechSynthesis.speak(speech);
+        }
+
+        const words = [
+            { word: 'Dip', phonemes: '/d/ /i/ /p/' },
+            { word: 'Lip', phonemes: '/l/ /i/ /p/' },
+            { word: 'Sip', phonemes: '/s/ /i/ /p/' },
+            { word: 'Tip', phonemes: '/t/ /i/ /p/' },
+            { word: 'Hip', phonemes: '/h/ /i/ /p/' },
+            { word: 'Rip', phonemes: '/r/ /i/ /p/' },
+            { word: 'Mat', phonemes: '/m/ /a/ /t/' },
+            { word: 'Bat', phonemes: '/b/ /a/ /t/' },
+            { word: 'Cat', phonemes: '/c/ /a/ /t/' },
+            { word: 'Pat', phonemes: '/p/ /a/ /t/' }
+        ];
+
+        const sentences = [
+            'Tim sips his drink.',
+            'The tip of the lip.',
+            'Max has a big bag.',
+            'Bill hits a bat.',
+            'A pig digs and a cat sits.'
+        ];
+
+        function populateList(list, items, type) {
+            items.forEach(item => {
+                let div = document.createElement('div');
+                div.classList.add(type);
+                div.innerHTML = `${item.word} - ${item.phonemes} 🔊`;
+                div.onclick = () => speakText(item.word);
+                list.appendChild(div);
+            });
+        }
+
+        populateList(document.getElementById('wordList'), words, 'word');
+        populateList(document.getElementById('sentenceList'), sentences.map(sentence => ({ word: sentence, phonemes: '' })), 'sentence');
+    </script>
+</body>
+</html>

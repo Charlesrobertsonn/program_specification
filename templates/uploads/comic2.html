@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Comic Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        /* Comic Grid Layout */
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .comic-panel {
+            background: #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .comic-panel img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #aaa;
+            border-radius: 5px;
+        }
+
+        /* Navigation Buttons */
+        .nav-container {
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: blue;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: darkblue;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .quiz-question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .quiz-btn {
+            background: green;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .quiz-btn:hover {
+            background: darkgreen;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Interactive Comic Book</h1>
+        
+        <div class="comic-grid" id="comic-grid">
+            <!-- Comic panels will be injected here dynamically -->
+        </div>
+
+        <div class="nav-container">
+            <button class="btn" onclick="prevPage()">⬅ Previous</button>
+            <span id="page-number">Page 1 of 3</span>
+            <button class="btn" onclick="nextPage()">Next ➡</button>
+        </div>
+
+        <div class="quiz-section" id="quiz-section">
+            <h2>Quiz: Test Your Understanding</h2>
+            <p class="quiz-question" id="quiz-question">What did Sab do to the cat?</p>
+            <div class="quiz-options">
+                <button class="quiz-btn" onclick="checkAnswer('A')">A) Fed the cat</button>
+                <button class="quiz-btn" onclick="checkAnswer('B')">B) Chased the cat</button>
+                <button class="quiz-btn" onclick="checkAnswer('C')">C) Petted the cat</button>
+            </div>
+            <p id="quiz-result"></p>
+        </div>
+    </div>
+
+    <script>
+        // Comic Book Pages Data
+        const comicPages = [
+            [
+                { text: "Tam has a cat.", img: "https://via.placeholder.com/150" },
+                { text: "The cat is on the mat.", img: "https://via.placeholder.com/150" },
+                { text: "Naf taps the cat.", img: "https://via.placeholder.com/150" },
+                { text: "The cat runs to Sab.", img: "https://via.placeholder.com/150" },
+                { text: "Sab pets the cat.", img: "https://via.placeholder.com/150" },
+                { text: "The cat sits in Sab’s lap.", img: "https://via.placeholder.com/150" }
+            ],
+            [
+                { text: "The dog sees the cat.", img: "https://via.placeholder.com/150" },
+                { text: "The cat jumps up high.", img: "https://via.placeholder.com/150" },
+                { text: "Sab calls the cat down.", img: "https://via.placeholder.com/150" },
+                { text: "The dog sniffs the cat.", img: "https://via.placeholder.com/150" },
+                { text: "The cat and dog become friends.", img: "https://via.placeholder.com/150" },
+                { text: "Sab smiles at the cat and dog.", img: "https://via.placeholder.com/150" }
+            ],
+            [
+                { text: "Sab gives the cat some food.", img: "https://via.placeholder.com/150" },
+                { text: "The dog also gets food.", img: "https://via.placeholder.com/150" },
+                { text: "They both eat happily.", img: "https://via.placeholder.com/150" },
+                { text: "Sab plays with the cat.", img: "https://via.placeholder.com/150" },
+                { text: "Sab takes the dog on a walk.", img: "https://via.placeholder.com/150" },
+                { text: "A happy day for everyone!", img: "https://via.placeholder.com/150" }
+            ]
+        ];
+
+        let currentPage = 0;
+
+        function renderComicPage() {
+            const comicGrid = document.getElementById("comic-grid");
+            const pageNumber = document.getElementById("page-number");
+
+            comicGrid.innerHTML = "";
+            comicPages[currentPage].forEach(panel => {
+                comicGrid.innerHTML += `
+                    <div class="comic-panel" onclick="speakText('${panel.text}')">
+                        <img src="${panel.img}" alt="Comic Image">
+                        <p>${panel.text}</p>
+                    </div>
+                `;
+            });
+
+            pageNumber.textContent = `Page ${currentPage + 1} of ${comicPages.length}`;
+
+            // Show quiz on the last page
+            if (currentPage === comicPages.length - 1) {
+                document.getElementById("quiz-section").style.display = "block";
+            } else {
+                document.getElementById("quiz-section").style.display = "none";
+            }
+        }
+
+        function speakText(text) {
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "en-US";
+            speechSynthesis.speak(speech);
+        }
+
+        function nextPage() {
+            if (currentPage < comicPages.length - 1) {
+                currentPage++;
+                renderComicPage();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                renderComicPage();
+            }
+        }
+
+        function checkAnswer(answer) {
+            let resultText = "";
+            if (answer === 'C') {
+                resultText = "✅ Correct! Sab petted the cat.";
+                document.getElementById("quiz-result").style.color = "green";
+            } else {
+                resultText = "❌ Incorrect! Try again.";
+                document.getElementById("quiz-result").style.color = "red";
+            }
+            document.getElementById("quiz-result").textContent = resultText;
+        }
+
+        // Initial render
+        renderComicPage();
+    </script>
+
+</body>
+</html>

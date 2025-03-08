@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Chapter - Spelling Practice</title>
+    <link rel="stylesheet" href="../styles/styles.css"> <!-- Adjust if needed -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+        }
+
+        .activity-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .word-grid p {
+            background: #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .spelling-section {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .play-btn, .check-btn {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .play-btn { background: blue; color: white; }
+        .check-btn { background: green; color: white; }
+
+        input {
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .correct { color: green; }
+        .incorrect { color: red; }
+
+        .image-box {
+            position: absolute;
+            left: -300px;
+            top: 50%;
+            width: 200px;
+            height: 200px;
+            background: #eee;
+            border-radius: 8px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Learning Chapter - Spelling Practice</h1>
+    </header>
+
+    <main class="activity-container">
+        <section>
+            <h2>Let's review words we've learnt</h2>
+            <div class="word-grid">
+                <p onclick="showImage('bat')">bat</p><p onclick="showImage('mat')">mat</p><p onclick="showImage('fan')">fan</p><p onclick="showImage('rat')">rat</p>
+                <p onclick="showImage('lap')">lap</p><p onclick="showImage('cap')">cap</p><p onclick="showImage('pen')">pen</p><p onclick="showImage('sun')">sun</p>
+                <p onclick="showImage('dog')">dog</p><p onclick="showImage('cat')">cat</p><p onclick="showImage('run')">run</p><p onclick="showImage('hat')">hat</p>
+            </div>
+
+            <div class="image-box" id="image-box">
+                <img id="word-image" src="" alt="Word Image" width="150">
+            </div>
+
+            <h2>Spelling Practice</h2>
+            <p>Press the play button to hear the word, then type the correct spelling.</p>
+
+            <div id="word-container"></div>
+
+            <button class="check-btn" onclick="checkSpelling()">Check Answers</button>
+            <p id="spelling-result" class="result"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Your Name</p>
+    </footer>
+
+    <script>
+        const words = ["bat", "mat", "fan", "rat", "lap"];
+        const container = document.getElementById("word-container");
+
+        words.forEach((word, index) => {
+            const section = document.createElement("div");
+            section.classList.add("spelling-section");
+            section.innerHTML = `
+                <p>Word ${index + 1}:</p>
+                <button class="play-btn" aria-label="Play ${word}" onclick="playAudio('${word}')">🔊 Play</button>
+                <input type="text" id="word${index + 1}" aria-label="Type spelling for word ${index + 1}">
+                <span id="result${index + 1}"></span>
+            `;
+            container.appendChild(section);
+        });
+
+        function playAudio(word) {
+            let audio = new Audio(`audio/${word}.mp3`);
+            audio.play();
+        }
+
+        function showImage(word) {
+            const imageBox = document.getElementById("image-box");
+            const imageElement = document.getElementById("word-image");
+            imageElement.src = `images/${word}.png`;
+            imageElement.alt = word;
+            imageBox.style.display = "flex";
+        }
+
+        function checkSpelling() {
+            let score = 0;
+
+            words.forEach((word, index) => {
+                let input = document.getElementById(`word${index + 1}`).value.trim().toLowerCase();
+                let resultSpan = document.getElementById(`result${index + 1}`);
+                if (input === word) {
+                    resultSpan.textContent = "✔";
+                    resultSpan.className = "correct";
+                    score++;
+                } else {
+                    resultSpan.textContent = "✘";
+                    resultSpan.className = "incorrect";
+                }
+            });
+
+            let resultText = score === words.length ? "Excellent! ✅ You got all correct!" : `You got ${score}/${words.length} correct. Try again! ❌`;
+            document.getElementById("spelling-result").textContent = resultText;
+            document.getElementById("spelling-result").style.color = score === words.length ? "green" : "red";
+        }
+    </script>
+
+</body>
+</html>
