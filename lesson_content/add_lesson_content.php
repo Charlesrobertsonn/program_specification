@@ -51,12 +51,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Lesson Content</title>
 </head>
 <body>
+
     <h2>Add Lesson Content</h2>
+
+    <!-- FORM FOR AUTO-POPULATION -->
+    <form action="populate_lesson_content.php" method="POST">
+        <label for="lesson_id">Lesson:</label>
+        <select name="lesson_id" required>
+            <option value="">Select Lesson</option>
+            <?php foreach ($lessons as $lesson): ?>
+                <option value="<?= htmlspecialchars($lesson['lesson_id']) ?>">
+                    <?= htmlspecialchars($lesson['lesson_title']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="template_id">Template:</label>
+        <select name="template_id" required>
+            <option value="">Select Template</option>
+            <?php foreach ($templates as $template): ?>
+                <option value="<?= htmlspecialchars($template['template_id']) ?>">
+                    <?= htmlspecialchars($template['template_name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <button type="submit">Auto-Populate Content</button>
+    </form>
+
+    <br><hr>
+
+    <!-- FORM FOR MANUAL ENTRY -->
     <form method="POST" enctype="multipart/form-data">
         <label>Lesson:</label>
         <select name="lesson_id" required>
@@ -66,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?= htmlspecialchars($lesson['lesson_title']) ?>
                 </option>
             <?php endforeach; ?>
-        </select><br><br>
+        </select>
 
         <label>Template:</label>
         <select name="template_id" required>
@@ -76,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?= htmlspecialchars($template['template_name']) ?>
                 </option>
             <?php endforeach; ?>
-        </select><br><br>
+        </select>
 
         <label>Content Key:</label>
         <select name="content_key" required>
@@ -85,16 +117,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="video_url">Video URL</option>
             <option value="image_url">Image URL</option>
             <option value="exercise">Exercise</option>
-        </select><br><br>
+        </select>
 
         <label>Content Value:</label>
-        <textarea name="content_value"></textarea><br><br>
+        <textarea name="content_value"></textarea>
 
         <label>Upload File:</label>
-        <input type="file" name="file_upload"><br><br>
+        <input type="file" name="file_upload">
 
         <input type="submit" value="Add Content">
     </form>
+
     <a href="list_lesson_content.php">Back to Content List</a>
 
     <script>
