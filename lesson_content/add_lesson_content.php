@@ -8,7 +8,6 @@ try {
 } catch (PDOException $e) {
     die("<p style='color:red;'>Database Error: " . htmlspecialchars($e->getMessage()) . "</p>");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -75,11 +74,7 @@ try {
 
         <label for="content_key">Content Key:</label>
         <select name="content_key" required>
-            <option value="title">Title</option>
-            <option value="instructions">Instructions</option>
-            <option value="video_url">Video URL</option>
-            <option value="image_url">Image URL</option>
-            <option value="exercise">Exercise</option>
+            <option value="">Select Content Key</option>
         </select>
 
         <label for="content_value">Content Value:</label>
@@ -98,23 +93,70 @@ try {
     document.addEventListener("DOMContentLoaded", function () {
         const templateSelect = document.querySelector("select[name='template_id']");
         const contentKeySelect = document.querySelector("select[name='content_key']");
+        const contentValueField = document.querySelector("textarea[name='content_value']");
 
         templateSelect.addEventListener("change", function () {
             const templateId = this.value;
 
-            // Fetch content keys dynamically via AJAX
+            if (!templateId) {
+                console.log("No template selected. Clearing dropdown.");
+                contentKeySelect.innerHTML = "<option value=''>Select Content Key</option>";
+                contentValueField.value = "";
+                return;
+            }
+
+            console.log(`Fetching content keys for template_id: ${templateId}`);
             fetch(`get_template_keys.php?template_id=${templateId}`)
                 .then(response => response.json())
                 .then(data => {
-                    contentKeySelect.innerHTML = ""; // Clear previous options
+                    console.log("Content Keys Received:", data);
+                    contentKeySelect.innerHTML = "<option value=''>Select Content Key</option>";
+
+                    if (data.error) {
+                        console.error("Error:", data.error);
+                        return;
+                    }
+
+                    if (data.length === 0) {
+                        console.warn("No content keys found for this template.");
+                        return;
+                    }
+
                     data.forEach(key => {
                         const option = document.createElement("option");
                         option.value = key;
                         option.textContent = key;
                         contentKeySelect.appendChild(option);
                     });
+
+                    console.log("Dropdown Updated Successfully");
                 })
                 .catch(error => console.error("Error fetching content keys:", error));
+        });
+
+        contentKeySelect.addEventListener("change", function () {
+            const contentKey = this.value;
+            const templateId = templateSelect.value;
+
+            if (!contentKey || !templateId) {
+                console.log("No content key selected.");
+                contentValueField.value = "";
+                return;
+            }
+
+            console.log(`Fetching content value for template_id: ${templateId}, content_key: ${contentKey}`);
+            fetch(`get_template_values.php?template_id=${templateId}&content_key=${contentKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Content Value Received:", data);
+                    if (data.error) {
+                        console.error("Error:", data.error);
+                        contentValueField.value = "";
+                    } else {
+                        contentValueField.value = data.content_value;
+                    }
+                })
+                .catch(error => console.error("Error fetching content values:", error));
         });
     });
     </script>
